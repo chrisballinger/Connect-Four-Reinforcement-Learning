@@ -1,6 +1,6 @@
 #!/bin/bash
 
-java MLGame 10 11 4 &
-(sleep 2 && java MLPlayerAlpha 1) &
-(sleep 3 && java MLPlayerAlpha 2) |
-grep -e wins -e over > results.txt
+java MLGame 11 10 4 &
+(sleep 1 && java MLPlayerAlphaRandom 1) &
+(sleep 2 && java MLPlayerAlphaBaseline 2) &
+

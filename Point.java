@@ -19,4 +19,10 @@ public class Point
 	{
 		return "{"+r+","+c+"}";
 	}
+
+	public boolean isEqualTo(Point p)
+	{
+		if (r == p.r && c == p.c) return true;
+		else return false;
+	}
 }
