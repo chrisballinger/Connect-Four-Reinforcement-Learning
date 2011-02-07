@@ -75,8 +75,8 @@ public class MLPlayerAlphaBaseline
 			FeatureFinder feature_finder = new FeatureFinder(internal_board, gameRules.numRows, gameRules.numCols);
 			ArrayList<Feature> features = feature_finder.FindFeatures();
 
-System.out.println("Features Found:");
-for (int i = 0; i < features.size(); i++) System.out.println("(" + features.get(i).start.r + ", " + features.get(i).start.c + ")\t" + features.get(i).theta + "\t" + features.get(i).length + "\t" + features.get(i).type);
+//System.out.println("Features Found:");
+//for (int i = 0; i < features.size(); i++) System.out.println("(" + features.get(i).start.r + ", " + features.get(i).start.c + ")\t" + features.get(i).theta + "\t" + features.get(i).length + "\t" + features.get(i).type);
 
 			// Decide on which column to place the token.
 			int selected_column = 0;
@@ -84,8 +84,13 @@ for (int i = 0; i < features.size(); i++) System.out.println("(" + features.get(
 			int counter = 0;
 			while (!found_valid_location)
 			{
+				// Randomly choose next vs. previous. This enables some non-determinism without sacrificing potential.
+				double random_value = Math.random();
+				Point selected_point = null;
+
 				// Get the next point and see if it is a valid move.
-				Point selected_point = features.get(counter).getNext();
+				if (random_value < 0.5f) selected_point = features.get(counter).getNext();
+				else selected_point = features.get(counter).getPrevious();
 				if (selected_point.r >= 0 && selected_point.r < gameRules.numRows &&
 				    selected_point.c >= 0 && selected_point.c < gameRules.numCols &&
 				    internal_board[selected_point.r][selected_point.c] == 0)
@@ -95,7 +100,8 @@ for (int i = 0; i < features.size(); i++) System.out.println("(" + features.get(
 				}
 
 				// Get the preivous point and see if it is a valid move.
-				selected_point = features.get(counter).getPrevious();
+				if (random_value < 0.5f) selected_point = features.get(counter).getPrevious();
+				else selected_point = features.get(counter).getNext();
 				if (selected_point.r >= 0 && selected_point.r < gameRules.numRows &&
 				    selected_point.c >= 0 && selected_point.c < gameRules.numCols &&
 				    internal_board[selected_point.r][selected_point.c] == 0)
