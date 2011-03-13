@@ -78,13 +78,13 @@ public class Weights
 	public void saveWeights(double[] newWeights)
 	{
 		weights = newWeights;
-	    try {
+	    /*try {
 		  Writer output = new BufferedWriter(new FileWriter("backup/weights-"+System.currentTimeMillis()+".txt"));
 	      output.write( toString() );
 		  output.close();
 	    }
 		catch(Exception e) {}
-		
+		*/
 		try {
 		  Writer output = new BufferedWriter(new FileWriter(path));
 	      output.write( toString() );
