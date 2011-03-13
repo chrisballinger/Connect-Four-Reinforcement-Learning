@@ -74,9 +74,9 @@ public class BoardLoader
 		}
 	}
 	
-	public static void main(String args[])
+	/*public static void main(String args[])
 	{
 		BoardLoader test = new BoardLoader();
 		test.printBoard();
-	}
+	}*/
 }
