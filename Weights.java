@@ -79,6 +79,13 @@ public class Weights
 	{
 		weights = newWeights;
 	    try {
+		  Writer output = new BufferedWriter(new FileWriter("backup/weights-"+System.currentTimeMillis()+".txt"));
+	      output.write( toString() );
+		  output.close();
+	    }
+		catch(Exception e) {}
+		
+		try {
 		  Writer output = new BufferedWriter(new FileWriter(path));
 	      output.write( toString() );
 		  output.close();
@@ -97,5 +104,6 @@ public class Weights
 			d[x]*=2;
 		}
 		w.saveWeights(d);
+		w.printWeights();
 	}*/
 }
