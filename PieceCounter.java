@@ -22,6 +22,27 @@ public class PieceCounter
 		return pieceCounter;
 	}
 
+	public int rowCounter(int[][] board, int cols, int row, int player)
+	{
+		int pieceCounter = 0;
+		for(int i = 0; i < cols; i++)
+		{
+			if(board[row][i] == player)
+				pieceCounter++;
+		}
+		return pieceCounter;
+	}
+
+	public int colCounter(int[][] board, int rows, int col, int player)
+	{
+		pieceCounter = 0;
+		for(int i = 0; i < rows; i++)
+		{
+			if(board[i][col] == player)
+				pieceCounter++;
+		} 
+		return pieceCounter;
+	}
 
 	public static void main(String args[])
 	{
