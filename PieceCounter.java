@@ -35,7 +35,7 @@ public class PieceCounter
 
 	public int colCounter(int[][] board, int rows, int col, int player)
 	{
-		pieceCounter = 0;
+		int pieceCounter = 0;
 		for(int i = 0; i < rows; i++)
 		{
 			if(board[i][col] == player)
