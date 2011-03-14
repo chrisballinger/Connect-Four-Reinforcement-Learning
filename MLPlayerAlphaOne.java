@@ -29,7 +29,7 @@ public class MLPlayerAlphaOne
 		Weights weights = new Weights("weights.txt");
 		
 		
-		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		/*//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		//ONLY USE FOR INITAL WEIGHTS! (FIRST RUN)
 		double[] initialWeights = new double[FeatureExplorer.getNumFeatures()];
 		for(int x = 0; x < FeatureExplorer.getNumFeatures(); x++)
@@ -39,7 +39,7 @@ public class MLPlayerAlphaOne
 		weights.setWeights(initialWeights);
 		weights.saveWeights();
 		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		
+		*/
 		
 		
 		// Set the id.
@@ -91,6 +91,8 @@ public class MLPlayerAlphaOne
 			
 			if(beginning == false)
 			{
+				System.out.println("Qsa: " + Qsa);
+				
 				sarsa(0,weights,Qsa,internal_board,gameRules,player_id);
 			}
 
@@ -104,6 +106,7 @@ public class MLPlayerAlphaOne
 			double[] w = weights.getWeights();
 			double max = 0;
 			int action = 0;
+			double temp;
 			for(int x = 0; x < gameRules.numCols; x++)
 			{
 				ff[x] = new FeatureExplorer();
@@ -112,11 +115,24 @@ public class MLPlayerAlphaOne
 				
 				if(ff_use[x])
 					features[x] = ff[x].getFeatures();
-					
+				
+				//System.out.println("features:");
+				//printD(features[x]);
 				for(int y = 0; y < numFeatures; y++)
 				{
+					//System.out.println("ff_use: " + ff_use[x]);
 					if(ff_use[x])
-						wx[x] += ((double)features[x][y])*w[y];
+					{
+						if(beginning)
+						{
+							if(mess.move == x)
+								wx[x] += ((double)features[x][y])*w[y];
+							else
+								wx[x] = 0;
+						}
+						else
+							wx[x] += ((double)features[x][y])*w[y];
+					}
 					else
 						wx[x] = 0;
 				}
@@ -124,6 +140,8 @@ public class MLPlayerAlphaOne
 					sig[x] = sigmoid(wx[x]);
 				else
 					sig[x] = 0;
+					
+				System.out.printf("wx[%d]: %f sig[%d]: %f\n",x,wx[x],x,sig[x]);
 				if(x == 0)
 				{
 					max = sig[0];
@@ -164,7 +182,12 @@ public class MLPlayerAlphaOne
 			beginning = false;
 		}
 		
-		sarsa(100, weights, Qsa,internal_board,gameRules,player_id);
+		System.out.println("Qsa: " + Qsa);
+		//if we win, reward 1, else reward -1
+		if((mess.win).equals(thePlayer))
+			sarsa(1, weights, Qsa,internal_board,gameRules,player_id);
+		else
+			sarsa(-1, weights, Qsa,internal_board,gameRules,player_id);
 		weights.saveWeights();
 
 		// Close the socket.
@@ -191,14 +214,23 @@ public class MLPlayerAlphaOne
 		f.initialize(internal_board, gameRules.numRows, gameRules.numCols, -1, player_id);
 		features = f.getFeatures();
 		
+		//debug printing
+		//System.out.println("features:");
+		//printD(features);
+		//weights.printWeights();
 		for(int x = 0; x < f.getNumFeatures(); x++)
 		{
 			wx += w[x]*features[x];
 		}
+		//System.out.println("wx: " + wx);
 		
 		sig = sigmoid(wx);
 		
+		//System.out.println("sig: " + sig);
+		
 		Qsa_new = Qsa + mu*((reward+gamma*sig)-Qsa);
+		
+		//System.out.println("Qsa: " + Qsa + "\nQsa_new: " + Qsa_new);
 		
 		
 		for(int x = 0; x < features.length; x++)
@@ -211,6 +243,14 @@ public class MLPlayerAlphaOne
 		}
 		weights.setWeights(w);
 		
+	}
+	
+	private void printD(double[] array)
+	{
+		for(int i = 0; i < array.length; i++)
+		{
+			System.out.println(array[i]);
+		}
 	}
 	
 	// The main function.
