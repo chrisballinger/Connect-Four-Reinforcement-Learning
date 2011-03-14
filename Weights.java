@@ -75,16 +75,13 @@ public class Weights
 		return s;
 	}
 	
-	public void saveWeights(double[] newWeights)
+	public void setWeights(double[] newWeights)
 	{
 		weights = newWeights;
-	    /*try {
-		  Writer output = new BufferedWriter(new FileWriter("backup/weights-"+System.currentTimeMillis()+".txt"));
-	      output.write( toString() );
-		  output.close();
-	    }
-		catch(Exception e) {}
-		*/
+	}
+	
+	public void saveWeights()
+	{
 		try {
 		  Writer output = new BufferedWriter(new FileWriter(path));
 	      output.write( toString() );
@@ -103,7 +100,8 @@ public class Weights
 		{
 			d[x]*=2;
 		}
-		w.saveWeights(d);
+		w.setWeights(d);
+		w.saveWeights();
 		w.printWeights();
 	}*/
 }

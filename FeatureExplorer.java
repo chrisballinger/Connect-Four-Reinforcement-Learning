@@ -32,7 +32,7 @@ public class FeatureExplorer
 		}
 
 		// Check.
-		if (grid[num_rows - 1][action_column] != 0) return false;
+		if (action_column!= -1 && grid[num_rows - 1][action_column] != 0) return false;
 
 		// Action Column!
 		if (action_column != -1)
@@ -154,7 +154,7 @@ public class FeatureExplorer
 		}
 		for (int c = 1; c < num_cols; c++) // Diagonal Up - Part 2. (Note the 1)
 		{
-			vectors[2][num_rows + c] = new ArrayList();
+			vectors[2][num_rows - 1 + c] = new ArrayList();
 			for (int r = 0; r < num_rows; r++)
 			{
 				if (c + r >= num_cols) break;
@@ -172,7 +172,7 @@ public class FeatureExplorer
 		}
 		for (int c = 1; c < num_cols; c++) // Diagonal Down - Part 2. (Note the 1)
 		{
-			vectors[3][num_rows + c] = new ArrayList();
+			vectors[3][num_rows - 1 + c] = new ArrayList();
 			for (int r = 0; r < num_rows; r++)
 			{
 				if (c - r < 0) break;
