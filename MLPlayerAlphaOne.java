@@ -143,7 +143,7 @@ public class MLPlayerAlphaOne
 				else
 					sig[x] = 0;
 					
-				//System.out.printf("wx[%d]: %f sig[%d]: %f\n",x,wx[x],x,sig[x]);
+				System.out.printf("wx[%d]: %f qsa[%d]: %f\n",x,wx[x],x,sig[x]);
 				if(x == 0)
 				{
 					max = sig[0];
@@ -243,7 +243,7 @@ public class MLPlayerAlphaOne
 		}
 		for(int x = 0; x < features.length; x++)
 		{
-			w[x] = w[x]-eta*(Qsa-gamma*Qsa_new)*((Qsa*(1-Qsa)*features[x]));
+			w[x] = w[x]+eta*((Qsa_new-Qsa)*Qsa*(1-Qsa)*features[x]);
 		}
 		weights.setWeights(w);
 		
