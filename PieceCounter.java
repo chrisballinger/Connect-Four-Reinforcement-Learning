@@ -42,12 +42,42 @@ public class PieceCounter
 				pieceCounter++;
 		} 
 		return pieceCounter;
+	}  
+        
+	public void cellNumberer()
+	{
+	  int board[][] = new int[10][11];
+	  int cellNumber = 110;
+
+	  for(int i = 0; i < 10; i++)
+	  {
+	    for(int j = 10; j >= 0; j--)
+	    {
+	      board[i][j] = 0;
+	      board[i][j] += cellNumber;
+	      cellNumber--;
+	    }
+          }
+
+          for(int i = 0; i < 10; i++)
+	  {
+	    for(int j = 0; j < 11; j++)
+	    {
+	      System.out.print(board[i][j] + " ");
+	    }
+	    System.out.println();
+	  }
+	} 
+
+        public int cellAdder(int xCoord, int yCoord, int[][] board)
+	{
+	  // add group totals
+          return 0; 
 	}
 
 	public static void main(String args[])
 	{
 		PieceCounter tester = new PieceCounter();
-
 		if(args.length != 3) 
 		{
 		    System.out.println("Usage: java FeatureCounter [num rows] [num cols] [player num]\n");
