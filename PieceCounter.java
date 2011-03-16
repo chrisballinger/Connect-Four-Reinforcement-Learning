@@ -44,36 +44,46 @@ public class PieceCounter
 		return pieceCounter;
 	}  
         
-	public void cellNumberer()
+	public int cellAdder(int board[][], int player)
 	{
-	  int board[][] = new int[10][11];
+	  int numberedBoard[][] = new int[10][11];
 	  int cellNumber = 110;
+	  int playerTotal = 0;
 
 	  for(int i = 0; i < 10; i++)
 	  {
 	    for(int j = 10; j >= 0; j--)
 	    {
-	      board[i][j] = 0;
-	      board[i][j] += cellNumber;
+	      numberedBoard[i][j] = 0;
+	      numberedBoard[i][j] += cellNumber;
 	      cellNumber--;
 	    }
           }
 
+	  /*
           for(int i = 0; i < 10; i++)
 	  {
 	    for(int j = 0; j < 11; j++)
 	    {
-	      System.out.print(board[i][j] + " ");
+	      System.out.print(numberedBoard[i][j] + " ");
 	    }
 	    System.out.println();
 	  }
-	} 
+	  */
 
-        public int cellAdder(int xCoord, int yCoord, int[][] board)
-	{
-	  // add group totals
-          return 0; 
-	}
+          for(int i = 0; i < 10; i++)
+	  {
+            for(int j = 0; j < 11; j++)
+            {
+              if(board[i][j] == player)
+              {
+                playerTotal += numberedBoard[i][j];
+              }
+            }
+          }
+
+	  return playerTotal;
+	} 
 
 	public static void main(String args[])
 	{
