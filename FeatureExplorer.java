@@ -69,6 +69,60 @@ public class FeatureExplorer
 		return (2 * 8) + 4 + 3 + 4;// + 2;
 	}
 
+	public int[] getSinglePieces()
+	{
+		int[] singles = new int[2];
+		singles[0] = 0;
+		singles[1] = 0;
+		int counter = 0;
+		for(int r = 0; r < num_rows; r++)
+		{
+			for(int c = 0; c < num_cols; c++)
+			{
+				// player 1
+				if(grid[r][c] == 1)
+				{
+					counter = 0;
+					for(int i = -1; i <= 1; i++)
+					{
+						for(int j = -1; j <= 1; j++)
+						{
+							if((r + i) >= 0 && (r + i) <= num_rows && (c + j) >= 0 									&& (c + j) <= num_cols)
+							{
+								if(grid[r + i][c + j] == 1)
+									counter++;
+							}
+ 
+						}
+					}
+					if(counter == 1)
+						singles[0] += 1;		
+				}
+
+				// player 2
+				if(grid[r][c] == 2)
+				{
+					counter = 0;
+					for(int i = -1; i <= 1; i++)
+					{
+						for(int j = -1; j <= 1; j++)
+						{
+							if((r + i) >= 0 && (r + i) <= num_rows && (c + j) >= 0 									&& (c + j) <= num_cols)
+							{
+								if(grid[r + i][c + j] == 2)
+									counter++;
+							}
+ 
+						}
+					}
+					if(counter == 1)
+						singles[1] += 1;		
+				}
+			}
+		}
+		return singles;	
+	}
+
 	// Get all of the features.
 	public double[] getFeatures()
 	{
