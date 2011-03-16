@@ -45,8 +45,20 @@ public class FeatureExplorer
 					grid[r + 1][action_column] = 1; // You (1) placed a token here.
 					break;
 				}
+				
 			}
+			if(r==-1)
+				grid[0][action_column] = 1;
 		}
+		/*System.out.println("player_id:" + player_id);
+		for (int r = 0; r < num_rows; r++)
+		{
+			for (int c = 0; c < num_cols; c++)
+			{
+				System.out.print(grid[r][c] + " ");
+			}
+			System.out.println();
+		}*/
 		return true;
 	}
 
@@ -85,6 +97,10 @@ public class FeatureExplorer
 				else if (grid[r][c] == 2) result[2] += 1.0f;
 			}
 		}
+		result[0] = result[0]/((double)num_cols*(double)num_rows);
+		result[1] = result[1]/((double)num_cols*(double)num_rows);
+		result[2] = result[2]/((double)num_cols*(double)num_rows);
+		
 		return result;
 	}
 
@@ -105,7 +121,10 @@ public class FeatureExplorer
 				}
 			}
 		}
-		return count / num_found;
+		if(check_rows)
+			return (count / num_found)/(double)num_rows;
+		else
+			return (count / num_found)/(double)num_cols;
 	}
 
 	// Find the number of base features that count the number of "in-a-rows" there are.

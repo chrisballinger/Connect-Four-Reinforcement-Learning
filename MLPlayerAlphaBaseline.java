@@ -68,6 +68,7 @@ public class MLPlayerAlphaBaseline
 				mess.move = (int)((float)gameRules.numCols * Math.random());
 				out.writeObject(mess);
 				mess = (GameMessage)in.readObject();
+				internal_board[gameRules.numRows-1][mess.move] = player_id;
 				continue;
 			}
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 COUNTER=0
-while [  $COUNTER -lt 3 ]; do
+while [  $COUNTER -lt 10 ]; do
     java MLGame 11 10 4 &
 	(sleep 0.1 && java MLPlayerAlphaOne 1) &
 	(sleep 0.1 && java MLPlayerAlphaBaseline 2)

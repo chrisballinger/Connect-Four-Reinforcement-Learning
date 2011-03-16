@@ -1,7 +1,7 @@
 import java.io.*;
 import java.net.*;
 
-public class MLPlayerAlphaOne
+public class MLPlayerAlphaOneCopy
 {
 	// An internal board representation.
 	private int internal_board[][] = null;
@@ -13,7 +13,7 @@ public class MLPlayerAlphaOne
 	int player_id = 0;
 
 	// Constructor.
-	public MLPlayerAlphaOne(Player p)
+	public MLPlayerAlphaOneCopy(Player p)
 	{
 		thePlayer=p;
 	}
@@ -192,7 +192,7 @@ public class MLPlayerAlphaOne
 			sarsa(0, weights, Qsa,internal_board,gameRules,player_id);	//reward 0 for loss
 		
 		//if(player_id==1)
-		weights.saveWeights();
+		//	weights.saveWeights();
 
 		// Close the socket.
 		sock.close();
@@ -281,7 +281,7 @@ public class MLPlayerAlphaOne
 		}
 
 		// Create the MLPlayer object, and begin play.
-		MLPlayerAlphaOne me = new MLPlayerAlphaOne(p);
+		MLPlayerAlphaOneCopy me = new MLPlayerAlphaOneCopy(p);
 		try
 		{
 			me.play(my_id);
