@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.io.*;
 
-// This class finds "features" in a given grid board.
+// This class finds "features" in a given grid board. 
 public class FeatureExplorer
 {
 	// This is the grid where features will be found.
