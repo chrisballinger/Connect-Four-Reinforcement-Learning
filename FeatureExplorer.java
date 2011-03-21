@@ -32,7 +32,7 @@ public class FeatureExplorer
 		}
 
 		// Check.
-		if (action_column!= -1 && grid[num_rows - 1][action_column] != 0) return false;
+		if (action_column != -1 && grid[num_rows - 1][action_column] != 0) return false;
 
 		// Action Column!
 		if (action_column != -1)
@@ -42,16 +42,18 @@ public class FeatureExplorer
 			{
 				if (grid[r][action_column] != 0)
 				{
+					if (r == num_rows - 1) return false;
 					grid[r + 1][action_column] = 1; // You (1) placed a token here.
 					break;
 				}
 				
 			}
-			if(r==-1)
+			if (r == -1)
 				grid[0][action_column] = 1;
 		}
 
-		/*System.out.println("player_id:" + player_id);
+		/*
+		System.out.println("player_id:" + player_id);
 		for (int r = 0; r < num_rows; r++)
 		{
 			for (int c = 0; c < num_cols; c++)
@@ -59,14 +61,15 @@ public class FeatureExplorer
 				System.out.print(grid[r][c] + " ");
 			}
 			System.out.println();
-		}*/
+		}
+		//*/
 		return true;
 	}
 
 	// Get the total number of features.
 	public static int getNumFeatures()
 	{
-		return (2 * 1) + (2 * 7) + 4 + 4 + 1 + 4;
+		return (2 * 1) + (2 * 7) + 4 + 4 + 1 + 4 + 1;
 	}
 
 	// Get all of the features.
@@ -79,11 +82,12 @@ public class FeatureExplorer
 		temp = getBaseFeatures();
 		for (int i = 0; i < (2 * 7) + 4 + 4; i++) features[(2 * 1) + i] = temp[i];
 		temp = getNumEmptyRedBlueCells();
-		features[(2 * 1) + (2 * 7) + 4 + 4 + 0] = temp[0];
+		features[(2 * 1) + (2 * 7) + 4 + 4 + 0] = temp[0]; // Avg game length of 30 moves.
 		features[(2 * 1) + (2 * 7) + 4 + 4 + 1 + 0] = getAverageLocationOf(1, true);	// Player 1 rows
 		features[(2 * 1) + (2 * 7) + 4 + 4 + 1 + 1] = getAverageLocationOf(1, false);	// Player 1 columns
 		features[(2 * 1) + (2 * 7) + 4 + 4 + 1 + 2] = getAverageLocationOf(2, true);	// Player 2 rows
 		features[(2 * 1) + (2 * 7) + 4 + 4 + 1 + 3] = getAverageLocationOf(2, false);	// Player 2 columns
+		features[(2 * 1) + (2 * 7) + 4 + 4 + 1 + 3 + 1] = 1.0f; // Bias
 		return features;
 	}
 
@@ -127,26 +131,29 @@ public class FeatureExplorer
 		System.out.println("\tNum Average Column Distance to Center of 2 = " + features[28]);
 	}
 
-
 	// Get the number of isolated points.
 	public double[] getSinglePieces()
 	{
 		double[] singles = new double[2];
 		singles[0] = 0.0f;
 		singles[1] = 0.0f;
-		for(int r = 0; r < num_rows; r++)
+		for (int r = 0; r < num_rows; r++)
 		{
-			for(int c = 0; c < num_cols; c++)
+			for (int c = 0; c < num_cols; c++)
 			{
 				int counter = 0;
-				for(int i = -1; i <= 1; i++)
-					for(int j = -1; j <= 1; j++)
-						if((r + i) >= 0 && (r + i) < num_rows && (c + j) >= 0 && (c + j) < num_cols)
-							if(grid[r + i][c + j] == grid[r][c])
+				for (int i = -1; i <= 1; i++)
+					for (int j = -1; j <= 1; j++)
+						if ((r + i) >= 0 && (r + i) < num_rows && (c + j) >= 0 && (c + j) < num_cols)
+							if (grid[r][c] != 0 && grid[r + i][c + j] == grid[r][c])
 								counter++;
-				if(counter == 1) singles[grid[r][c] - 1] += 1.0f;
+				if (counter == 1) singles[grid[r][c] - 1] += 1.0f;
 			}
 		}
+
+		// Divide by the average number of single pieces in a game of 30 moves = 5 per player.
+		singles[0] /= 5.0f;
+		singles[1] /= 5.0f;
 		return singles;	
 	}
 
@@ -166,7 +173,12 @@ public class FeatureExplorer
 		result[0] = result[0] / (((double)num_cols + (double)num_rows) / 2.0f);
 		result[1] = result[1] / (((double)num_cols + (double)num_rows) / 2.0f);
 		result[2] = result[2] / (((double)num_cols + (double)num_rows) / 2.0f);
-		
+
+		// Divide each by the average of 30 moves per game.
+		result[0] /= 30.0f;
+		result[1] /= 30.0f;
+		result[2] /= 30.0f;
+
 		return result;
 	}
 
@@ -187,8 +199,9 @@ public class FeatureExplorer
 				}
 			}
 		}
-		if(check_rows) return (count / num_found);
-		else return (count / num_found);
+		if (num_found == 0) return 0.0f;
+		else if (check_rows) return (count / num_found) / (num_rows / 2.0f);
+		else return (count / num_found) / (num_cols / 2.0f);
 	}
 
 	// Find the number of base features that count the number of "in-a-rows" there are.
@@ -720,19 +733,19 @@ public class FeatureExplorer
 		}
 
 		// Set all the results.
-		result[0] = (double)xx1;		result[1] = (double)x_x1;		result[2] = (double)x__x1;
-		result[3] = (double)xxx1;		result[4] = (double)xx_x1;		result[5] = (double)x_xx1;
-		result[6] = (double)xxxx1;
+		result[0] = (double)xx1 / 5.0f;			result[1] = (double)x_x1 / 3.0f;		result[2] = (double)x__x1 / 2.0f;
+		result[3] = (double)xxx1 / 3.0f;		result[4] = (double)xx_x1 / 2.0f;		result[5] = (double)x_xx1 / 2.0f;
+		result[6] = (double)xxxx1 / 1.0f;
 
-		result[7] = (double)xx2;		result[8] = (double)x_x2;		result[9] = (double)x__x2;
-		result[10] = (double)xxx2;		result[11] = (double)xx_x2;		result[12] = (double)x_xx2;
-		result[13] = (double)xxxx2;
+		result[7] = (double)xx2 / 5.0f;			result[8] = (double)x_x2 / 3.0f;		result[9] = (double)x__x2 / 2.0f;
+		result[10] = (double)xxx2 / 3.0f;		result[11] = (double)xx_x2 / 2.0f;		result[12] = (double)x_xx2 / 2.0f;
+		result[13] = (double)xxxx2 / 1.0f;
 
-		result[14] = (double)num_row_pieces;							result[15] = (double)num_col_pieces;
-		result[16] = (double)num_diag_up_pieces;						result[17] = (double)num_diag_down_pieces;
+		result[14] = (double)num_row_pieces / 5.0f;							result[15] = (double)num_col_pieces / 5.0f;
+		result[16] = (double)num_diag_up_pieces / 5.0f;						result[17] = (double)num_diag_down_pieces / 5.0f;
 
-		result[18] = (double)num_threat_points1;						result[19] = (double)num_threat_points2;
-		result[20] = threat_level_bravo;								result[21] = threat_level_tango;
+		result[18] = (double)num_threat_points1 / 3.0f;						result[19] = (double)num_threat_points2 / 3.0f;
+		result[20] = threat_level_bravo / 5.0f;								result[21] = threat_level_tango / 5.0f;
 		//result[22] = threat_level_charlie;								result[23] = threat_level_zulu;
 
 		// Return the result.
