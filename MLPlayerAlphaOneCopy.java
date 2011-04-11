@@ -3,11 +3,11 @@ import java.net.*;
 
 public class MLPlayerAlphaOneCopy
 {
-	// If debug should be printed or not. 
+	// If debug should be printed or not.
 	private boolean PRINT_DEBUG = false;
 
 	// The constants that define the reinforcement learning algorithm.
-	double epsilon = 0.2f;
+	double epsilon = 0.0f; // FOR TESTING!
 	double eta = 0.3f;
 	double gamma = 0.99f;
 

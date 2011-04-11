@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.io.*;
 
-// This class finds "features" in a given grid board. 
+// This class finds "features" in a given grid board.
 public class FeatureExplorer
 {
 	// This is the grid where features will be found.
@@ -69,7 +69,7 @@ public class FeatureExplorer
 	// Get the total number of features.
 	public static int getNumFeatures()
 	{
-		return (2 * 1) + (2 * 7) + 4 + 4 + 1 + 4 + 1;
+		return (2 * 1) + (2 * 7) + 4 + 4 + 6 + 1 + 4 + 1;
 	}
 
 	// Get all of the features.
@@ -80,14 +80,29 @@ public class FeatureExplorer
 		features[0] = temp[0];
 		features[1] = temp[1];
 		temp = getBaseFeatures();
-		for (int i = 0; i < (2 * 7) + 4 + 4; i++) features[(2 * 1) + i] = temp[i];
+		for (int i = 0; i < (2 * 7) + 4 + 4 + 6; i++) features[(2 * 1) + i] = temp[i];
+		double[] temp2 = temp;
 		temp = getNumEmptyRedBlueCells();
-		features[(2 * 1) + (2 * 7) + 4 + 4 + 0] = temp[0]; // Avg game length of 30 moves.
-		features[(2 * 1) + (2 * 7) + 4 + 4 + 1 + 0] = getAverageLocationOf(1, true);	// Player 1 rows
-		features[(2 * 1) + (2 * 7) + 4 + 4 + 1 + 1] = getAverageLocationOf(1, false);	// Player 1 columns
-		features[(2 * 1) + (2 * 7) + 4 + 4 + 1 + 2] = getAverageLocationOf(2, true);	// Player 2 rows
-		features[(2 * 1) + (2 * 7) + 4 + 4 + 1 + 3] = getAverageLocationOf(2, false);	// Player 2 columns
-		features[(2 * 1) + (2 * 7) + 4 + 4 + 1 + 3 + 1] = 1.0f; // Bias
+		features[(2 * 1) + (2 * 7) + 4 + 4 + 6 + 0] = temp[0]; // Avg game length of 30 moves.
+		features[(2 * 1) + (2 * 7) + 4 + 4 + 6 + 1 + 0] = getAverageLocationOf(1, true);	// Player 1 rows
+		features[(2 * 1) + (2 * 7) + 4 + 4 + 6 + 1 + 1] = getAverageLocationOf(1, false);	// Player 1 columns
+		features[(2 * 1) + (2 * 7) + 4 + 4 + 6 + 1 + 2] = getAverageLocationOf(2, true);	// Player 2 rows
+		features[(2 * 1) + (2 * 7) + 4 + 4 + 6 + 1 + 3] = getAverageLocationOf(2, false);	// Player 2 columns
+		features[(2 * 1) + (2 * 7) + 4 + 4 + 6 + 1 + 3 + 1] = 1.0f; // Bias
+
+		// A quick hack to test removing some of the less important features.
+		features[0] = 0.0f;
+		features[1] = 0.0f;
+		features[16] = 0.0f;
+		features[17] = 0.0f;
+		features[18] = 0.0f;
+		features[19] = 0.0f;
+		features[30] = 0.0f;
+		features[31] = 0.0f;
+		features[32] = 0.0f;
+		features[33] = 0.0f;
+		features[34] = 0.0f;
+
 		return features;
 	}
 
@@ -208,7 +223,7 @@ public class FeatureExplorer
 	public double[] getBaseFeatures()
 	{
 		// The result.
-		double[] result = new double[2 * 7 + 4 + 4];
+		double[] result = new double[2 * 7 + 4 + 4 + 6];
 		// Note: These are what it is counting: The Number Of...
 		//   XX
 		//   XXX
@@ -227,6 +242,9 @@ public class FeatureExplorer
 		//   ... summed distance to threats for 2, divided by 2
 		//   ... summed distance to places that will make threats for 1, divided by 10
 		//   ... summed distance to places that will make threats for 2, divided by 10
+		//   XOX = threats blocked
+		//   XXOX = threats blocked
+		//   XOXX = threats blocked
 
 		// Begin by making vectors out of all the rows, columns, left diagonals, and right diagonals.
 		ArrayList[][] vectors = new ArrayList[4][];
@@ -401,6 +419,9 @@ public class FeatureExplorer
 		double threat_level_tango = 0.0f;
 		double threat_level_charlie = 0.0f;
 		double threat_level_zulu = 0.0f;
+		int xox1 = 0;	int xox2 = 0;
+		int xxox1 = 0;	int xxox2 = 0;
+		int xoxx1 = 0;	int xoxx2 = 0;
 		for (int i = 0; i < 4; i++)
 		{
 			// Loop through all of the rows, cols, or rows + cols.
@@ -577,6 +598,42 @@ public class FeatureExplorer
 					if (v[0] != 1 && v[1] == 1 && v[2] == 1 && v[3] == 1 && v[4] == 1 && v[5] != 1)
 					{ xxxx1++; num_pieces_found++; k += 4; num_threat_points1++; threat_level_bravo += (double)num_rows; }
 				}
+				for (int k = 0; k < vectors[i][j].size() - 4; k++)
+				{
+					int[] v = new int[5];
+					v[0] = ((Integer)vectors[i][j].get(k)).intValue(); v[1] = ((Integer)vectors[i][j].get(k + 1)).intValue();
+					v[2] = ((Integer)vectors[i][j].get(k + 2)).intValue(); v[3] = ((Integer)vectors[i][j].get(k + 3)).intValue();
+					v[4] = ((Integer)vectors[i][j].get(k + 4)).intValue();
+					if (v[0] != 1 && v[1] == 1 && v[2] == 2 && v[3] == 1 && v[4] != 1)
+					{
+						xox1++;
+						k += 1;
+					}
+				}
+				for (int k = 0; k < vectors[i][j].size() - 5; k++)
+				{
+					int[] v = new int[6];
+					v[0] = ((Integer)vectors[i][j].get(k)).intValue(); v[1] = ((Integer)vectors[i][j].get(k + 1)).intValue();
+					v[2] = ((Integer)vectors[i][j].get(k + 2)).intValue(); v[3] = ((Integer)vectors[i][j].get(k + 3)).intValue();
+					v[4] = ((Integer)vectors[i][j].get(k + 4)).intValue(); v[5] = ((Integer)vectors[i][j].get(k + 5)).intValue();
+					if (v[0] != 1 && v[1] == 1 && v[2] == 1 && v[3] == 2 && v[4] == 1 && v[5] != 1)
+					{
+						xxox1++;
+						k += 4;
+					}
+				}
+				for (int k = 0; k < vectors[i][j].size() - 5; k++)
+				{
+					int[] v = new int[6];
+					v[0] = ((Integer)vectors[i][j].get(k)).intValue(); v[1] = ((Integer)vectors[i][j].get(k + 1)).intValue();
+					v[2] = ((Integer)vectors[i][j].get(k + 2)).intValue(); v[3] = ((Integer)vectors[i][j].get(k + 3)).intValue();
+					v[4] = ((Integer)vectors[i][j].get(k + 4)).intValue(); v[5] = ((Integer)vectors[i][j].get(k + 5)).intValue();
+					if (v[0] != 1 && v[1] == 1 && v[2] == 2 && v[3] == 1 && v[4] == 1 && v[5] != 1)
+					{
+						xoxx1++;
+						k += 4;
+					}
+				}
 
 				// For the other player now.
 				for (int k = 0; k < vectors[i][j].size() - 3; k++)
@@ -723,6 +780,42 @@ public class FeatureExplorer
 					if (v[0] != 2 && v[1] == 2 && v[2] == 2 && v[3] == 2 && v[4] == 2 && v[5] != 2)
 					{ xxxx2++; num_pieces_found++; k += 4; num_threat_points2++; threat_level_tango += (double)num_rows; }
 				}
+				for (int k = 0; k < vectors[i][j].size() - 4; k++)
+				{
+					int[] v = new int[5];
+					v[0] = ((Integer)vectors[i][j].get(k)).intValue(); v[1] = ((Integer)vectors[i][j].get(k + 1)).intValue();
+					v[2] = ((Integer)vectors[i][j].get(k + 2)).intValue(); v[3] = ((Integer)vectors[i][j].get(k + 3)).intValue();
+					v[4] = ((Integer)vectors[i][j].get(k + 4)).intValue();
+					if (v[0] != 2 && v[1] == 2 && v[2] == 1 && v[3] == 2 && v[4] != 2)
+					{
+						xox2++;
+						k += 1;
+					}
+				}
+				for (int k = 0; k < vectors[i][j].size() - 5; k++)
+				{
+					int[] v = new int[6];
+					v[0] = ((Integer)vectors[i][j].get(k)).intValue(); v[1] = ((Integer)vectors[i][j].get(k + 1)).intValue();
+					v[2] = ((Integer)vectors[i][j].get(k + 2)).intValue(); v[3] = ((Integer)vectors[i][j].get(k + 3)).intValue();
+					v[4] = ((Integer)vectors[i][j].get(k + 4)).intValue(); v[5] = ((Integer)vectors[i][j].get(k + 5)).intValue();
+					if (v[0] != 2 && v[1] == 2 && v[2] == 2 && v[3] == 1 && v[4] == 2 && v[5] != 2)
+					{
+						xxox2++;
+						k += 4;
+					}
+				}
+				for (int k = 0; k < vectors[i][j].size() - 5; k++)
+				{
+					int[] v = new int[6];
+					v[0] = ((Integer)vectors[i][j].get(k)).intValue(); v[1] = ((Integer)vectors[i][j].get(k + 1)).intValue();
+					v[2] = ((Integer)vectors[i][j].get(k + 2)).intValue(); v[3] = ((Integer)vectors[i][j].get(k + 3)).intValue();
+					v[4] = ((Integer)vectors[i][j].get(k + 4)).intValue(); v[5] = ((Integer)vectors[i][j].get(k + 5)).intValue();
+					if (v[0] != 2 && v[1] == 2 && v[2] == 1 && v[3] == 2 && v[4] == 2 && v[5] != 2)
+					{
+					 	xoxx2++;
+						k += 4;
+					}
+				}
 			}
 
 			// Based on the type of group it is, add to a different pool of pieces count.
@@ -747,6 +840,9 @@ public class FeatureExplorer
 		result[18] = (double)num_threat_points1 / 3.0f;						result[19] = (double)num_threat_points2 / 3.0f;
 		result[20] = threat_level_bravo / 5.0f;								result[21] = threat_level_tango / 5.0f;
 		//result[22] = threat_level_charlie;								result[23] = threat_level_zulu;
+
+		result[22] = (double)xox1;				result[23] = (double)xxox1;				result[24] = (double)xoxx1;
+		result[25] = (double)xox2;				result[26] = (double)xxox2;				result[27] = (double)xoxx2;
 
 		// Return the result.
 		return result;
