@@ -24,6 +24,7 @@ public class MLPlayerAlphaTwo
 	// The eligibility trace variables.
 	double[] game_history = new double[11*10 + 1];
 	int game_history_length = 0;
+	double eligibility = 0.0f;
 
 	// Constructor.
 	public MLPlayerAlphaTwo(Player p)
@@ -478,21 +479,23 @@ public class MLPlayerAlphaTwo
 			System.out.println("\tsigmoid(wx): " + sig);
 
 		// Perform eligibility traces.
-		for (int e = 0; e < game_history_length; e++)
-		{
+		//for (int e = 0; e < game_history_length; e++)
+		//{
 			// Compute the delta.
 			double rtp1 = 0.0f;
-			if (e == game_history_length - 1 && reward == 1.0f) rtp1 = 1.0f;
-			double delta = rtp1 + gamma * sig - game_history[e];
+			if (/*e == game_history_length - 1 && */reward == 1.0f) rtp1 = 1.0f;
+			double delta = rtp1 + gamma * sig - game_history[game_history_length];
 
 			// Find eligibility.
-			double eligibility = 1.0f;
-			for (int asdf = 0; asdf < game_history_length - e; asdf++) eligibility *= gamma * lambda;
+			//for (int asdf = 0; asdf < game_history_length - e; asdf++) eligibility *= gamma * lambda;
 
 			// Weight vector update.
 			for (int j = 0; j < FeatureExplorer.getNumFeatures(); j++)
-				w[j] = w[j] + eta * eligibility * ((y_i - sig) * (sig) * (1 - sig) * x_i[j]);
-		}
+			{
+				w[j] = w[j] + eta * delta * eligibility;
+				eligibility = gamma * lambda * eligibility + ((y_i - sig) * (sig) * (1 - sig) * x_i[j]);
+			}
+		//}
 
 		// Update game history.
 		game_history[game_history_length] = sig;
