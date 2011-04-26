@@ -1,6 +1,6 @@
 #!/bin/bash
 
-java MLGame 11 10 4 &
-(sleep 1 && java MLPlayer 1) &
-(sleep 2 && java MLPlayerAlphaOne 2) &
+java MLGame 10 11 4 &
+(sleep 1 && java MLPlayerAlphaThree 2) &
+(sleep 2 && java MLPlayer 1)
 

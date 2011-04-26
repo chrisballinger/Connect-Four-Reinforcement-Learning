@@ -1,13 +1,13 @@
 import java.io.*;
 import java.net.*;
 
-public class MLPlayerAlphaTwo
+public class MLPlayerAlphaThree
 {
 	// If debug should be printed or not.
 	private boolean PRINT_DEBUG = false;
 
 	// The constants that define the reinforcement learning algorithm.
-	double epsilon = 0.15f; // FOR TESTING!
+	double epsilon = 0.0f;//0.15f; // FOR TESTING!
 	double eta = 0.25f;
 	double gamma = 0.99f;
 	double lambda = 0.5f;
@@ -26,7 +26,7 @@ public class MLPlayerAlphaTwo
 	int game_history_length = 0;
 
 	// Constructor.
-	public MLPlayerAlphaTwo(Player p)
+	public MLPlayerAlphaThree(Player p)
 	{
 		thePlayer = p;
 	}
@@ -151,7 +151,7 @@ public class MLPlayerAlphaTwo
 				int r2 = 0;
 				for (r2 = 0; r2 < gameRules.numRows; r2++)
 				{
-					if (temp_action_board[r2][x] != 0)
+					if (r2 != 0 && temp_action_board[r2][x] != 0)
 					{
 						temp_action_board[r2 - 1][x] = player_id;
 						break;
@@ -172,7 +172,7 @@ public class MLPlayerAlphaTwo
 					r2 = 0;
 					for (r2 = 0; r2 < gameRules.numRows; r2++)
 					{
-						if (temp_action_board2[r2][c] != 0)
+						if (r2 != 0 && temp_action_board2[r2][c] != 0)
 						{
 							temp_action_board2[r2 - 1][c] = player_id % 2 + 1;
 							break;
@@ -234,7 +234,7 @@ public class MLPlayerAlphaTwo
 				// Now that the opponents action is known, see what your action should be in the next round afterwards under the assumption the opponent takes this action.
 				for (r2 = 0; r2 < gameRules.numRows; r2++)
 				{
-					if (temp_action_board[r2][opponent_action] != 0)
+					if (r2 != 0 && temp_action_board[r2][opponent_action] != 0)
 					{
 						temp_action_board[r2 - 1][opponent_action] = player_id % 2 + 1;
 						break;
@@ -264,7 +264,7 @@ public class MLPlayerAlphaTwo
 					r2 = 0;
 					for (r2 = 0; r2 < gameRules.numRows; r2++)
 					{
-						if (temp_action_board2[r2][c] != 0)
+						if (r2 != 0 && temp_action_board2[r2][c] != 0)
 						{
 							temp_action_board2[r2 - 1][c] = player_id;
 							break;
@@ -325,7 +325,7 @@ public class MLPlayerAlphaTwo
 						temp_action_board[r][c] = internal_board[r][c];
 				for (r2 = 0; r2 < gameRules.numRows; r2++)
 				{
-					if (temp_action_board[r2][your_action] != 0)
+					if (r2 != 0 && temp_action_board[r2][your_action] != 0)
 					{
 						temp_action_board[r2 - 1][your_action] = player_id;
 						break;
@@ -375,8 +375,62 @@ public class MLPlayerAlphaTwo
 			}
 
 			// If the opponent will win, the Q(s, a) value should be set to 1 to block.
-			if (def_do != -1) selected_column = def_do;
-			else if (def_do2 != -1) selected_column = def_do2;
+			//if (def_do != -1) selected_column = def_do;
+			//else if (def_do2 != -1) selected_column = def_do2;
+
+			// Do a final check. Check if the opponent is going to win in the next move. If so, effectively set Q(s, a) = 1. Do this by using the current board layout.
+			for (int c = 0; c < gameRules.numCols; c++)
+			{
+				// Generate a temporary board with this action placed in it.
+				int[][] temp_action_board = new int[gameRules.numRows][gameRules.numCols];
+				for (int c2 = 0; c2 < gameRules.numCols; c2++)
+					for (int r2 = 0; r2 < gameRules.numRows; r2++)
+						temp_action_board[r2][c2] = internal_board[r2][c2];
+				int r2 = 0;
+				for (r2 = 0; r2 < gameRules.numRows; r2++)
+				{
+					if (r2 != 0 && temp_action_board[r2][c] != 0)
+					{
+						temp_action_board[r2 - 1][c] = player_id % 2 + 1;
+						break;
+					}
+				}
+				if (r2 == gameRules.numRows) temp_action_board[r2 - 1][c] = player_id % 2 + 1;
+
+				// Check if this is a winning position for the opponent player. If it is, we want to go there.
+				if (checkWin(temp_action_board, gameRules.numRows, gameRules.numCols, gameRules.numConnect, player_id % 2 + 1))
+				{
+					selected_column = c;
+					break;
+				}
+			}
+
+			// Do a final check. Check if you are about to win in the next move. If so, effectively set Q(s, a) = 1. Do this by using the current board layout.
+			for (int c = 0; c < gameRules.numCols; c++)
+			{
+				// Generate a temporary board with this action placed in it.
+				int[][] temp_action_board = new int[gameRules.numRows][gameRules.numCols];
+				for (int c2 = 0; c2 < gameRules.numCols; c2++)
+					for (int r2 = 0; r2 < gameRules.numRows; r2++)
+						temp_action_board[r2][c2] = internal_board[r2][c2];
+				int r2 = 0;
+				for (r2 = 0; r2 < gameRules.numRows; r2++)
+				{
+					if (r2 != 0 && temp_action_board[r2][c] != 0)
+					{
+						temp_action_board[r2 - 1][c] = player_id;
+						break;
+					}
+				}
+				if (r2 == gameRules.numRows) temp_action_board[r2 - 1][c] = player_id;
+
+				// Check if this is a winning position for the opponent player. If it is, we want to go there.
+				if (checkWin(temp_action_board, gameRules.numRows, gameRules.numCols, gameRules.numConnect, player_id))
+				{
+					selected_column = c;
+					break;
+				}
+			}
 
 			// (Compute previous board layout) Previous is equal to the old current.
 			for (int j = 0; j < FeatureExplorer.getNumFeatures(); j++) x_i[j] = x_ip1[j];
@@ -397,7 +451,7 @@ public class MLPlayerAlphaTwo
 			int r = 0;
 			for (r = 0; r < gameRules.numRows; r++)
 			{
-				if (internal_board[r][selected_column] != 0)
+				if (r != 0 && internal_board[r][selected_column] != 0)
 				{
 					internal_board[r - 1][selected_column] = player_id;
 					break;
@@ -427,12 +481,12 @@ public class MLPlayerAlphaTwo
 		if(mess.win == thePlayer)
 		{
 			sarsa(1, weights, x_i, x_ip1);	//reward 1 for win
-			System.out.println("MLPlayerAlphaTwo has won.");
+			System.out.println("MLPlayerAlphaThree has won.");
 		}
 		else
 		{
 			sarsa(0, weights, x_i, x_ip1);	//reward 0 for loss
-			System.out.println("MLPlayerAlphaTwo has lost.");
+			System.out.println("MLPlayerAlphaThree has lost.");
 		}
 
 		// Save the weights.
@@ -566,7 +620,7 @@ public class MLPlayerAlphaTwo
 		// If no argument is specified, throw an error.
 		if(args.length != 1)
 		{
-	    		System.out.println("Usage:\n java MPlayerAlphaTwo [1|2]");
+	    		System.out.println("Usage:\n java MPlayerAlphaThree [1|2]");
 	    		System.exit(-1);
 		}
 
@@ -579,12 +633,12 @@ public class MLPlayerAlphaTwo
 		else if (my_id == 2) p = Player.TWO;
 		else
 		{
-			System.out.println("Usage:\n java MPlayerAlphaTwo [1|2]");
+			System.out.println("Usage:\n java MPlayerAlphaThree [1|2]");
 			System.exit(-1);
 		}
 
 		// Create the MLPlayer object, and begin play.
-		MLPlayerAlphaTwo me = new MLPlayerAlphaTwo(p);
+		MLPlayerAlphaThree me = new MLPlayerAlphaThree(p);
 		try
 		{
 			me.play(my_id);

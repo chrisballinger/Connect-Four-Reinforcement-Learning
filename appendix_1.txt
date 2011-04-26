@@ -1,0 +1,114 @@
+Loading random board...
+0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 
+0 0 0 1 0 1 2 
+0 0 0 1 0 2 1 
+0 0 1 2 2 2 1 
+2 1 2 1 2 1 2 
+Features:
+	Num Isolated 1 = 0.0
+	Num Isolated 2 = 0.2
+	1 xx =   1.0
+	1 x_x =  0.3333333333333333
+	1 x__x = 0.0
+	1 xxx =  0.3333333333333333
+	1 xx_x = 0.0
+	1 x_xx = 0.0
+	1 xxxx = 0.0
+	2 xx =   1.2
+	2 x_x =  0.0
+	2 x__x = 0.0
+	2 xxx =  0.6666666666666666
+	2 xx_x = 0.0
+	2 x_xx = 0.0
+	2 xxxx = 0.0
+	Num Row Pieces =           0.4
+	Num Column Pieces =        0.8
+	Num Diagonal Up Pieces =   1.0
+	Num Diagonal Down Pieces = 0.8
+	Num Threat Points of 1 =   0.3333333333333333
+	Num Threat Points of 2 =   0.0
+	Threat Level Bravo (1) =   0.4
+	Threat Level Tango (2) =   0.0
+	Num Empty Cells / ((num_rows + num_cols) / 2) (i.e. Game Counter) = 0.12307692307692308
+	Num Average Row Distance to Center of 1 =    0.5555555555555556
+	Num Average Column Distance to Center of 1 = 0.42857142857142855
+	Num Average Row Distance to Center of 2 =    0.7037037037037037
+	Num Average Column Distance to Center of 2 = 0.46031746031746035
+Done.
+Loading random board...
+0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 
+1 0 0 0 1 0 0 
+1 2 0 2 1 0 0 
+2 1 2 1 2 2 0 
+Features:
+	Num Isolated 1 = 0.0
+	Num Isolated 2 = 0.0
+	1 xx =   0.8
+	1 x_x =  0.0
+	1 x__x = 0.0
+	1 xxx =  0.0
+	1 xx_x = 0.0
+	1 x_xx = 0.0
+	1 xxxx = 0.0
+	2 xx =   1.0
+	2 x_x =  0.3333333333333333
+	2 x__x = 0.0
+	2 xxx =  0.0
+	2 xx_x = 0.0
+	2 x_xx = 0.0
+	2 xxxx = 0.0
+	Num Row Pieces =           0.4
+	Num Column Pieces =        0.4
+	Num Diagonal Up Pieces =   0.6
+	Num Diagonal Down Pieces = 0.6
+	Num Threat Points of 1 =   0.0
+	Num Threat Points of 2 =   0.0
+	Threat Level Bravo (1) =   0.0
+	Threat Level Tango (2) =   0.0
+	Num Empty Cells / ((num_rows + num_cols) / 2) (i.e. Game Counter) = 0.15384615384615383
+	Num Average Row Distance to Center of 1 =    0.6666666666666666
+	Num Average Column Distance to Center of 1 = 0.5238095238095238
+	Num Average Row Distance to Center of 2 =    0.8888888888888888
+	Num Average Column Distance to Center of 2 = 0.4761904761904762
+Done.
+Loading random board...
+0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 
+0 0 0 1 0 0 2 
+2 1 1 1 0 2 2 
+1 2 1 2 0 2 1 
+Features:
+	Num Isolated 1 = 0.2
+	Num Isolated 2 = 0.2
+	1 xx =   1.2
+	1 x_x =  0.0
+	1 x__x = 0.0
+	1 xxx =  0.3333333333333333
+	1 xx_x = 0.0
+	1 x_xx = 0.0
+	1 xxxx = 0.0
+	2 xx =   1.2
+	2 x_x =  0.3333333333333333
+	2 x__x = 0.0
+	2 xxx =  0.0
+	2 xx_x = 0.0
+	2 x_xx = 0.0
+	2 xxxx = 0.0
+	Num Row Pieces =           0.6
+	Num Column Pieces =        0.8
+	Num Diagonal Up Pieces =   1.0
+	Num Diagonal Down Pieces = 0.4
+	Num Threat Points of 1 =   0.3333333333333333
+	Num Threat Points of 2 =   0.0
+	Threat Level Bravo (1) =   0.4
+	Threat Level Tango (2) =   0.0
+	Num Empty Cells / ((num_rows + num_cols) / 2) (i.e. Game Counter) = 0.14358974358974358
+	Num Average Row Distance to Center of 1 =    0.7619047619047619
+	Num Average Column Distance to Center of 1 = 0.5102040816326531
+	Num Average Row Distance to Center of 2 =    0.7619047619047619
+	Num Average Column Distance to Center of 2 = 0.5918367346938777
+Done.
